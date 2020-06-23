@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="wmzService" class="com.example.demo.service.impl.WMZServiceImpl"></bean>
+    <bean id="zsService" class="com.example.demo.service.impl.ZSServiceImpl"></bean>
+    <!-- 切面类 -->
+    <bean id="OrderXmlAop" class="com.example.demo.aop.OrderXmlAop"></bean>
+
+    <!-- Aop配置 -->
+    <aop:config proxy-target-class="true">
+        <!-- 切点 -->
+        <aop:pointcut id="point" expression="execution(public * com.example.demo.service.TakeawayService.*(..)))"/>
+        <!-- 切面 -->
+        <aop:aspect ref="OrderXmlAop">
+            <!-- 环绕通知 -->
+            <aop:around pointcut-ref="point" method="doAround"/>
+            <!-- 前置通知： 在目标方法调用前执行 -->
+            <aop:before pointcut-ref="point" method="doBefore"/>
+            <!-- 后置通知： -->
+            <aop:after pointcut-ref="point" method="doAfter"/>
+            <!-- 返回后通知 -->
+            <aop:after-returning pointcut-ref="point" method="doAfterReturning"/>
+            <!-- 异常通知 -->
+            <aop:after-throwing pointcut-ref="point" method="doAfterThrowing"/>
+        </aop:aspect>
+    </aop:config>
+</beans>

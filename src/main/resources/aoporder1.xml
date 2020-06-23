@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="wmzService" class="com.example.demo.service.impl.WMZServiceImpl"></bean>
+    <bean id="zsService" class="com.example.demo.service.impl.ZSServiceImpl"></bean>
+    <!-- 切面类 -->
+    <bean id="OrderXmlAop" class="com.example.demo.aop.OrderXmlAop"></bean>
+
+    <!-- Aop配置 -->
+    <aop:config proxy-target-class="true">
+        <!-- 切点 -->
+        <aop:pointcut id="point" expression="execution(com.example.demo.service.TakeawayService.Order(double)) and args(price) and bean(zsService)"/>
+        <!-- 切面 -->
+        <aop:aspect ref="OrderXmlAop">
+            <!-- 环绕通知 -->
+            <aop:around pointcut-ref="point" method="doAround"/>
+        </aop:aspect>
+    </aop:config>
+</beans>
